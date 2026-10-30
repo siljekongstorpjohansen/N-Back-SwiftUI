@@ -4,6 +4,9 @@
 //
 //  Created by Jonas Willén on 2023-09-19.
 //
+//  App entry point: creates the single N_Back_SwiftUIVM and hands it to every view
+//  through the environment.
+//
 
 import SwiftUI
 

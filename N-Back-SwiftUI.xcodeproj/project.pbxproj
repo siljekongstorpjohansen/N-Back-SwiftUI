@@ -7,28 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1E7E570000000000000001 /* N_Back_SwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1E7E570000000000000002 /* N_Back_SwiftUITests.swift */; };
 		EBA7C6D42ACB0C1800585AF6 /* nback.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA7C6D32ACB0C1800585AF6 /* nback.c */; };
-		EBA7C6DC2ACC0CD300585AF6 /* SoundIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA7C6DB2ACC0CD300585AF6 /* SoundIconView.swift */; };
-		EBA7C6DE2ACC0EB700585AF6 /* ImageIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA7C6DD2ACC0EB700585AF6 /* ImageIconView.swift */; };
-		EBA7C6E02ACC0F2700585AF6 /* ActionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA7C6DF2ACC0F2700585AF6 /* ActionIconView.swift */; };
 		EBD8C0EA2AB9909200DC99B8 /* N_Back_SwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD8C0E92AB9909200DC99B8 /* N_Back_SwiftUIApp.swift */; };
-		EBD8C0EC2AB9909200DC99B8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD8C0EB2AB9909200DC99B8 /* ContentView.swift */; };
+		EBD8C0EC2AB9909200DC99B8 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD8C0EB2AB9909200DC99B8 /* Views.swift */; };
 		EBD8C0EE2AB9909300DC99B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBD8C0ED2AB9909300DC99B8 /* Assets.xcassets */; };
 		EBD8C0F12AB9909400DC99B8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBD8C0F02AB9909400DC99B8 /* Preview Assets.xcassets */; };
 		EBD8C0F82AB9974600DC99B8 /* N_Back_SwiftUIVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD8C0F72AB9974600DC99B8 /* N_Back_SwiftUIVM.swift */; };
 		EBD8C0FA2AB997EC00DC99B8 /* N_Back_SwiftUIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD8C0F92AB997EC00DC99B8 /* N_Back_SwiftUIModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AB1E7E570000000000000004 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EBD8C0DE2AB9909200DC99B8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EBD8C0E52AB9909200DC99B8;
+			remoteInfo = "N-Back-SwiftUI";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		AB1E7E570000000000000002 /* N_Back_SwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = N_Back_SwiftUITests.swift; sourceTree = "<group>"; };
+		AB1E7E570000000000000003 /* N-Back-SwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "N-Back-SwiftUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA7C6D12ACB0C0C00585AF6 /* nback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nback.h; sourceTree = "<group>"; };
 		EBA7C6D22ACB0C1800585AF6 /* N-Back-SwiftUI-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "N-Back-SwiftUI-Bridging-Header.h"; sourceTree = "<group>"; };
 		EBA7C6D32ACB0C1800585AF6 /* nback.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nback.c; sourceTree = "<group>"; };
-		EBA7C6DB2ACC0CD300585AF6 /* SoundIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundIconView.swift; sourceTree = "<group>"; };
-		EBA7C6DD2ACC0EB700585AF6 /* ImageIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageIconView.swift; sourceTree = "<group>"; };
-		EBA7C6DF2ACC0F2700585AF6 /* ActionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionIconView.swift; sourceTree = "<group>"; };
 		EBD8C0E62AB9909200DC99B8 /* N-Back-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "N-Back-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBD8C0E92AB9909200DC99B8 /* N_Back_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = N_Back_SwiftUIApp.swift; sourceTree = "<group>"; };
-		EBD8C0EB2AB9909200DC99B8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EBD8C0EB2AB9909200DC99B8 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		EBD8C0ED2AB9909300DC99B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EBD8C0F02AB9909400DC99B8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EBD8C0F72AB9974600DC99B8 /* N_Back_SwiftUIVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = N_Back_SwiftUIVM.swift; sourceTree = "<group>"; };
@@ -36,6 +43,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AB1E7E570000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EBD8C0E32AB9909200DC99B8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -46,6 +60,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB1E7E570000000000000006 /* N-Back-SwiftUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AB1E7E570000000000000002 /* N_Back_SwiftUITests.swift */,
+			);
+			path = "N-Back-SwiftUITests";
+			sourceTree = "<group>";
+		};
 		EBA7C6CF2ACB059900585AF6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -61,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				EBD8C0E82AB9909200DC99B8 /* N-Back-SwiftUI */,
+				AB1E7E570000000000000006 /* N-Back-SwiftUITests */,
 				EBD8C0E72AB9909200DC99B8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				EBD8C0E62AB9909200DC99B8 /* N-Back-SwiftUI.app */,
+				AB1E7E570000000000000003 /* N-Back-SwiftUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,10 +121,7 @@
 		EBD8C0FF2AB9BEEC00DC99B8 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				EBD8C0EB2AB9909200DC99B8 /* ContentView.swift */,
-				EBA7C6DD2ACC0EB700585AF6 /* ImageIconView.swift */,
-				EBA7C6DB2ACC0CD300585AF6 /* SoundIconView.swift */,
-				EBA7C6DF2ACC0F2700585AF6 /* ActionIconView.swift */,
+				EBD8C0EB2AB9909200DC99B8 /* Views.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -108,6 +129,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AB1E7E570000000000000007 /* N-Back-SwiftUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB1E7E570000000000000008 /* Build configuration list for PBXNativeTarget "N-Back-SwiftUITests" */;
+			buildPhases = (
+				AB1E7E570000000000000009 /* Sources */,
+				AB1E7E570000000000000005 /* Frameworks */,
+				AB1E7E57000000000000000A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB1E7E57000000000000000B /* PBXTargetDependency */,
+			);
+			name = "N-Back-SwiftUITests";
+			productName = "N-Back-SwiftUITests";
+			productReference = AB1E7E570000000000000003 /* N-Back-SwiftUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		EBD8C0E52AB9909200DC99B8 /* N-Back-SwiftUI */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EBD8C0F42AB9909400DC99B8 /* Build configuration list for PBXNativeTarget "N-Back-SwiftUI" */;
@@ -135,6 +174,10 @@
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					AB1E7E570000000000000007 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = EBD8C0E52AB9909200DC99B8;
+					};
 					EBD8C0E52AB9909200DC99B8 = {
 						CreatedOnToolsVersion = 14.3.1;
 						LastSwiftMigration = 1430;
@@ -155,11 +198,19 @@
 			projectRoot = "";
 			targets = (
 				EBD8C0E52AB9909200DC99B8 /* N-Back-SwiftUI */,
+				AB1E7E570000000000000007 /* N-Back-SwiftUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AB1E7E57000000000000000A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EBD8C0E42AB9909200DC99B8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -172,24 +223,73 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AB1E7E570000000000000009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB1E7E570000000000000001 /* N_Back_SwiftUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EBD8C0E22AB9909200DC99B8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBD8C0EC2AB9909200DC99B8 /* ContentView.swift in Sources */,
-				EBA7C6DE2ACC0EB700585AF6 /* ImageIconView.swift in Sources */,
-				EBA7C6DC2ACC0CD300585AF6 /* SoundIconView.swift in Sources */,
+				EBD8C0EC2AB9909200DC99B8 /* Views.swift in Sources */,
 				EBD8C0FA2AB997EC00DC99B8 /* N_Back_SwiftUIModel.swift in Sources */,
 				EBA7C6D42ACB0C1800585AF6 /* nback.c in Sources */,
 				EBD8C0F82AB9974600DC99B8 /* N_Back_SwiftUIVM.swift in Sources */,
 				EBD8C0EA2AB9909200DC99B8 /* N_Back_SwiftUIApp.swift in Sources */,
-				EBA7C6E02ACC0F2700585AF6 /* ActionIconView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		AB1E7E57000000000000000B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EBD8C0E52AB9909200DC99B8 /* N-Back-SwiftUI */;
+			targetProxy = AB1E7E570000000000000004 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		AB1E7E57000000000000000C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PDY9TRV8WD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "se.jonaswahslen.N-Back-SwiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/N-Back-SwiftUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/N-Back-SwiftUI";
+			};
+			name = Debug;
+		};
+		AB1E7E57000000000000000D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PDY9TRV8WD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "se.jonaswahslen.N-Back-SwiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/N-Back-SwiftUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/N-Back-SwiftUI";
+			};
+			name = Release;
+		};
 		EBD8C0F22AB9909400DC99B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -313,20 +413,20 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"N-Back-SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = PDY9TRV8WD;
+				DEVELOPMENT_TEAM = AD4YRRWZ83;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "se.jonaswahslen.N-Back-SwiftUI";
+				PRODUCT_BUNDLE_IDENTIFIER = "silje-kongstorp.N-Back-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "N-Back-SwiftUI/Model/N-Back-SwiftUI-Bridging-Header.h";
@@ -345,20 +445,20 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"N-Back-SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = PDY9TRV8WD;
+				DEVELOPMENT_TEAM = AD4YRRWZ83;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "se.jonaswahslen.N-Back-SwiftUI";
+				PRODUCT_BUNDLE_IDENTIFIER = "silje-kongstorp.N-Back-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "N-Back-SwiftUI/Model/N-Back-SwiftUI-Bridging-Header.h";
@@ -370,6 +470,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AB1E7E570000000000000008 /* Build configuration list for PBXNativeTarget "N-Back-SwiftUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB1E7E57000000000000000C /* Debug */,
+				AB1E7E57000000000000000D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EBD8C0E12AB9909200DC99B8 /* Build configuration list for PBXProject "N-Back-SwiftUI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

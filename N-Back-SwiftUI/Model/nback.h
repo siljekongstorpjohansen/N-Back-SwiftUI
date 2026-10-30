@@ -12,5 +12,7 @@ typedef struct nback_type *Nback;
 
 Nback create(int size, int combinations, int matchPercentage, int nback);
 int getIndexOf(Nback s, int index);
+// Frees a sequence made by create
+void destroy(Nback s);
 
 #endif
