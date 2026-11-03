@@ -61,7 +61,7 @@ external library.
 
 - [x] Dual n-back (visual and auditory at the same time).
 - [x] Settings screen (persistent) — stored in `UserDefaults`.
-- [ ] Score history with names and a local database — **not implemented** (optional; three of four are enough).
+- [x] Score history with names and a local database.
 - [x] Responsive layout — portrait and landscape, phone and tablet.
 - [x] Accessibility — match button at least 44 pt tall (72 pt used); a fallback message when no
       text-to-speech voice is available.
