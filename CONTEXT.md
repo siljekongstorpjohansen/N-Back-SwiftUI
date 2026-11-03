@@ -10,12 +10,13 @@ Give this file, `SPEC.md` and `STYLE.md` to the LLM at the start of every sessio
 
 ## Hard constraints
 - **No external libraries beyond the platform SDK.** Only Apple frameworks: SwiftUI, Foundation,
-  AVFoundation, XCTest. No Swift packages, CocoaPods or copied third-party code.
+  AVFoundation, Core Data, XCTest. No Swift packages, CocoaPods or copied third-party code.
 - **Architecture: MVVM.** Appropriate classes; no single god-class. See `STYLE.md`.
 - **Sequence rules are our own code.** `nback.c` may produce the raw sequence, but the 20–40 % match
   rate and the first-n guarantee are enforced in Swift (`NBackSequenceGenerator`).
 - **Unit tests must run and pass** on the submitted code (`xcodebuild test`, or ⌘U in Xcode).
-- Settings in `UserDefaults`; text-to-speech with one `AVSpeechSynthesizer` created once.
+- Settings in `UserDefaults`; score history in a local Core Data database; text-to-speech with one
+  `AVSpeechSynthesizer` created once.
 - Must work on iPhone and iPad, portrait and landscape.
 
 ## "Single-file preferred"
@@ -24,7 +25,7 @@ Interpreted as **one file per MVVM layer**, not one file for the whole app (that
 
 | File | Layer | Contents |
 |---|---|---|
-| `Model/N_Back_SwiftUIModel.swift` | Model | Settings, sequence generator, round state machine, storage |
+| `Model/N_Back_SwiftUIModel.swift` | Model | Settings, sequence generator, round state machine, storage, score history database |
 | `N_Back_SwiftUIVM.swift` | ViewModel | `N_Back_SwiftUIVM` |
 | `View/Views.swift` | View | All SwiftUI screens and their small helper views |
 | `N_Back_SwiftUIApp.swift` | App entry | `@main`; creates the ViewModel |

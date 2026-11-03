@@ -10,7 +10,7 @@ View (SwiftUI)  ──calls──▶  ViewModel  ──calls──▶  Model
 
 | Layer | May do | Must not do |
 |---|---|---|
-| **Model** (`N_Back_SwiftUIModel.swift`, `nback.c`) | Game rules, sequence generation, scoring, the round state machine, saving/loading with `UserDefaults` | Import SwiftUI; know about screens, timers or speech |
+| **Model** (`N_Back_SwiftUIModel.swift`, `nback.c`) | Game rules, sequence generation, scoring, the round state machine, saving/loading with `UserDefaults` and Core Data | Import SwiftUI; know about screens, timers or speech |
 | **ViewModel** (`N_Back_SwiftUIVM.swift`) | Own the model, run the round timer, speak letters, publish state, prepare every text the views show | Import SwiftUI; navigate between screens |
 | **View** (`Views.swift`) | Lay out what the ViewModel publishes, forward taps to it, own purely visual state (animations, navigation flags) | Contain game logic, decide texts from game state, format values |
 
@@ -36,6 +36,11 @@ View (SwiftUI)  ──calls──▶  ViewModel  ──calls──▶  Model
   letter as text instead.
 - **Persistence**: settings and high score in `UserDefaults` via small store types in the Model
   (`GameSettingsStore`, `HighScoreStore`). Settings are validated on every load and save.
+- **Score history database**: Core Data (`ScoreHistoryStore`), which stores the data in SQLite on the
+  device. The data model is built in code rather than in an `.xcdatamodeld` file, so the Model layer
+  stays one file. Only `ScoreHistoryStore` touches Core Data; it returns plain `ScoreEntry` values, so
+  the ViewModel and views never see managed objects. Tests use an in-memory store.
+  Core Data was chosen over SwiftData because SwiftData needs iOS 17 and the app supports iOS 16.4.
 - **Display values**: the ViewModel exposes ready-made strings (`eventDurationText`, `gameTitle`,
   `startButtonTitle`, …) so views never format or decide text.
 - **Responsive layout**: views choose a side-by-side layout when the screen is wider than tall
@@ -56,4 +61,5 @@ View (SwiftUI)  ──calls──▶  ViewModel  ──calls──▶  Model
 ## Testing
 - Unit tests in `N-Back-SwiftUITests/N_Back_SwiftUITests.swift` (XCTest), run with ⌘U.
 - Covered: sequence generation, match-rate enforcement, first-n guarantee, double-press prevention,
-  presses before start / after end / during the first n events, scoring formula, settings validation.
+  presses before start / after end / during the first n events, scoring formula, settings validation,
+  score history (save, sort order, delete, name cleaning).

@@ -9,8 +9,9 @@
 //  Contents:
 //    - ContentView    root navigation stack
 //    - HomeView       high score, stimulus choice, current settings, start button
-//    - GameView       grid / ear icon, live state, match buttons
+//    - GameView       grid / ear icon, live state, match buttons, round summary popup
 //    - SettingsView   persistent settings
+//    - ScoreHistoryView  saved rounds with names
 //
 
 import SwiftUI
@@ -72,6 +73,7 @@ struct HomeView: View {
                         VStack(spacing: 20) {
                             CurrentSettingsView()
                             startButton
+                            historyButton
                         }
                     }
                 } else {
@@ -79,7 +81,10 @@ struct HomeView: View {
                         titleAndScore
                         StimulusModePicker(selectedMode: $theViewModel.selectedMode)
                         CurrentSettingsView()
-                        startButton
+                        VStack(spacing: 12) {
+                            startButton
+                            historyButton
+                        }
                     }
                 }
             }
@@ -126,6 +131,18 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity, minHeight: 56)
         }
         .buttonStyle(.borderedProminent)
+        .frame(maxWidth: 400)
+    }
+
+    private var historyButton: some View {
+        NavigationLink {
+            ScoreHistoryView()
+        } label: {
+            Label("Score history", systemImage: "list.number")
+                .font(.headline)
+                .frame(maxWidth: .infinity, minHeight: 44)
+        }
+        .buttonStyle(.bordered)
         .frame(maxWidth: 400)
     }
 }
@@ -241,7 +258,12 @@ struct GameView: View {
                                  missedMatches: theViewModel.missedMatches,
                                  wrongMatches: theViewModel.wrongMatches,
                                  score: theViewModel.score,
-                                 isNewHighScore: theViewModel.isNewHighScore) {
+                                 isNewHighScore: theViewModel.isNewHighScore,
+                                 playerName: $theViewModel.playerName,
+                                 isSaved: theViewModel.isRoundSaved,
+                                 canSave: theViewModel.canSaveRound,
+                                 saveErrorMessage: theViewModel.saveErrorMessage,
+                                 onSave: theViewModel.saveRoundToHistory) {
                     theViewModel.dismissRoundSummary()
                 }
                 .transition(.opacity.combined(with: .scale(scale: 0.9)))
@@ -383,6 +405,11 @@ struct RoundSummaryView: View {
     let wrongMatches: Int
     let score: Int
     let isNewHighScore: Bool
+    @Binding var playerName: String
+    let isSaved: Bool
+    let canSave: Bool
+    let saveErrorMessage: String?
+    let onSave: () -> Void
     let onClose: () -> Void
 
     var body: some View {
@@ -423,6 +450,7 @@ struct RoundSummaryView: View {
                            systemImageName: "trophy.fill", color: .blue)
                     .font(.headline)
             }
+            saveSection
             Button(action: onClose) {
                 Text("Close")
                     .font(.headline)
@@ -436,6 +464,36 @@ struct RoundSummaryView: View {
         .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isModal)
         .accessibilityAction(.escape, onClose)
+    }
+
+    /// Name field and save button, replaced by a confirmation once the round is saved.
+    @ViewBuilder
+    private var saveSection: some View {
+        if isSaved {
+            Label("Saved to score history as \(playerName)", systemImage: "checkmark.seal.fill")
+                .font(.subheadline)
+                .foregroundStyle(.green)
+                .multilineTextAlignment(.center)
+        } else {
+            VStack(spacing: 8) {
+                HStack {
+                    TextField("Your name", text: $playerName)
+                        .textFieldStyle(.roundedBorder)
+                        .textContentType(.name)
+                        .submitLabel(.done)
+                        .onSubmit(onSave)
+                    Button("Save", action: onSave)
+                        .buttonStyle(.bordered)
+                        .disabled(!canSave)
+                }
+                .frame(minHeight: 44)
+                if let saveErrorMessage {
+                    Text(saveErrorMessage)
+                        .font(.footnote)
+                        .foregroundStyle(.orange)
+                }
+            }
+        }
     }
 }
 
@@ -543,6 +601,86 @@ struct GameView_Previews: PreviewProvider {
             GameView()
         }
         .environmentObject(N_Back_SwiftUIVM())
+    }
+}
+
+// MARK: - Score history screen
+
+/// Saved rounds, best first. Swipe a row (or tap Edit) to delete it.
+struct ScoreHistoryView: View {
+    @EnvironmentObject var theViewModel : N_Back_SwiftUIVM
+
+    var body: some View {
+        Group {
+            if theViewModel.scoreHistory.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "list.number")
+                        .font(.system(size: 48))
+                        .foregroundStyle(.secondary)
+                    Text("No saved scores yet")
+                        .font(.headline)
+                    Text("Finish a round and save it with your name to see it here.")
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                List {
+                    ForEach(Array(theViewModel.scoreHistory.enumerated()), id: \.element.id) { index, entry in
+                        ScoreHistoryRow(rank: index + 1, entry: entry,
+                                        detailText: theViewModel.historyDetailText(for: entry),
+                                        countsText: theViewModel.historyCountsText(for: entry))
+                    }
+                    .onDelete(perform: theViewModel.deleteScores)
+                }
+                .toolbar {
+                    EditButton()
+                }
+            }
+        }
+        .navigationTitle("Score history")
+    }
+}
+
+/// One saved round: rank, name, details and score.
+struct ScoreHistoryRow: View {
+    let rank: Int
+    let entry: ScoreEntry
+    let detailText: String
+    let countsText: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Text("\(rank)")
+                .font(.headline.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .frame(minWidth: 28)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(entry.name)
+                    .font(.headline)
+                Text(detailText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Text(countsText)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Text("\(entry.score)")
+                .font(.title2.bold().monospacedDigit())
+        }
+        .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+struct ScoreHistoryView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ScoreHistoryView()
+        }
+        .environmentObject(N_Back_SwiftUIVM(scoreHistoryStore: ScoreHistoryStore(inMemory: true)))
     }
 }
 

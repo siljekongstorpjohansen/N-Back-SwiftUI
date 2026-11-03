@@ -18,8 +18,8 @@ Dual n-back shows two independent sequences at once (a grid cell and a spoken le
 \* iPhones with Face ID never rotate to upside-down portrait; iOS blocks it for all apps.
 
 Why iOS/SwiftUI: the course skeleton (`JonasWillen/N-Back-SwiftUI`) is a SwiftUI project, and
-`AVSpeechSynthesizer` and `UserDefaults` give text-to-speech and settings storage without any
-external library.
+`AVSpeechSynthesizer`, `UserDefaults` and Core Data give text-to-speech, settings storage and a
+local database without any external library.
 
 ## Screens
 
@@ -38,8 +38,14 @@ external library.
    - When a round has been played to the end, a popup shows correct matches, missed matches,
      wrong matches and the score (plus "New high score!" when beaten). It closes with the Close
      button or a tap outside it. It is not shown when the player leaves mid-round.
+   - In the popup the player can type a name and save the round to the score history
+     (once per round). The last name used is filled in next time.
 3. **Settings screen** (persistent)
    - Events per round, event duration, n, grid size (3×3 to 5×5), number of distinct spoken letters.
+4. **Score history screen** (opened from the home screen)
+   - Every saved round, best score first (equal scores newest first): rank, name, n, stimulus type,
+     date, correct / missed / wrong matches and score.
+   - Swipe a row, or tap Edit, to delete it.
 
 ## Mandatory requirements (all needed to pass)
 
@@ -61,7 +67,7 @@ external library.
 
 - [x] Dual n-back (visual and auditory at the same time).
 - [x] Settings screen (persistent) — stored in `UserDefaults`.
-- [ ] Score history with names and a local database — **not implemented** (optional; three of four are enough).
+- [x] Score history with names and a local database — Core Data (SQLite) on the device.
 - [x] Responsive layout — portrait and landscape, phone and tablet.
 - [x] Accessibility — match button at least 44 pt tall (72 pt used); a fallback message when no
       text-to-speech voice is available.

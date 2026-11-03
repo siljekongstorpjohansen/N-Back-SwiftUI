@@ -5,9 +5,11 @@
 //  Created by Jonas Willén on 2023-09-19.
 //
 //  The model layer: pure game logic with no UI or timer code, so it can be unit tested.
+//  Also the storage: settings and high score in UserDefaults, score history in Core Data.
 //
 
 import Foundation
+import CoreData
 
 /// Which kind of stimuli the player trains with.
 enum StimulusMode: String, CaseIterable, Identifiable {
@@ -404,5 +406,159 @@ struct HighScoreStore {
         let best = max(load(), score)
         defaults.set(best, forKey: key)
         return best
+    }
+}
+
+/// Remembers the last name the player saved a score under, so they do not have to type it every round.
+struct PlayerNameStore {
+    private let defaults: UserDefaults
+    private let key = "playerName"
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
+
+    func load() -> String {
+        defaults.string(forKey: key) ?? ""
+    }
+
+    func save(_ name: String) {
+        defaults.set(name, forKey: key)
+    }
+}
+
+/// One finished round in the score history.
+struct ScoreEntry: Identifiable, Equatable {
+    /// Longest name that is saved; longer names are cut.
+    static let maxNameLength = 20
+
+    let id: UUID
+    let name: String
+    let score: Int
+    let n: Int
+    let mode: StimulusMode
+    let correctMatches: Int
+    let missedMatches: Int
+    let wrongMatches: Int
+    let date: Date
+
+    /// The name with surrounding spaces removed and cut to `maxNameLength`, or nil if nothing is left.
+    static func cleanedName(_ name: String) -> String? {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        return String(trimmed.prefix(maxNameLength))
+    }
+}
+
+/// The score history: a local Core Data (SQLite) database of named results.
+///
+/// The data model is built in code instead of an .xcdatamodeld file, so the whole Model layer
+/// stays in this file. Records are plain `NSManagedObject`s read with key-value coding and
+/// converted to `ScoreEntry` values, so no other layer touches Core Data.
+final class ScoreHistoryStore {
+    private static let entityName = "ScoreRecord"
+
+    /// Built once: Core Data warns if two models describe the same entity in one process.
+    private static let model: NSManagedObjectModel = {
+        func attribute(_ name: String, _ type: NSAttributeType) -> NSAttributeDescription {
+            let attribute = NSAttributeDescription()
+            attribute.name = name
+            attribute.attributeType = type
+            attribute.isOptional = false
+            return attribute
+        }
+        let entity = NSEntityDescription()
+        entity.name = entityName
+        entity.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
+        entity.properties = [
+            attribute("id", .UUIDAttributeType),
+            attribute("name", .stringAttributeType),
+            attribute("score", .integer64AttributeType),
+            attribute("n", .integer64AttributeType),
+            attribute("mode", .stringAttributeType),
+            attribute("correctMatches", .integer64AttributeType),
+            attribute("missedMatches", .integer64AttributeType),
+            attribute("wrongMatches", .integer64AttributeType),
+            attribute("date", .dateAttributeType),
+        ]
+        let model = NSManagedObjectModel()
+        model.entities = [entity]
+        return model
+    }()
+
+    private let container: NSPersistentContainer
+    private var context: NSManagedObjectContext { container.viewContext }
+
+    /// - Parameter inMemory: true keeps the data in memory only (used by the unit tests).
+    init(inMemory: Bool = false) {
+        container = NSPersistentContainer(name: "ScoreHistory", managedObjectModel: Self.model)
+        if inMemory {
+            container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+        }
+        container.loadPersistentStores { _, error in
+            // The history is an extra: without it the game still works, so log instead of crashing.
+            if let error {
+                print("Score history could not be opened: \(error)")
+            }
+        }
+    }
+
+    /// All entries, best score first; equal scores newest first.
+    func loadAll() -> [ScoreEntry] {
+        let request = NSFetchRequest<NSManagedObject>(entityName: Self.entityName)
+        request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false),
+                                   NSSortDescriptor(key: "date", ascending: false)]
+        let records = (try? context.fetch(request)) ?? []
+        return records.compactMap(Self.entry(from:))
+    }
+
+    /// Saves a new entry. Returns false if the database could not be written.
+    @discardableResult
+    func add(_ entry: ScoreEntry) -> Bool {
+        let record = NSManagedObject(entity: Self.model.entitiesByName[Self.entityName]!, insertInto: context)
+        record.setValue(entry.id, forKey: "id")
+        record.setValue(entry.name, forKey: "name")
+        record.setValue(Int64(entry.score), forKey: "score")
+        record.setValue(Int64(entry.n), forKey: "n")
+        record.setValue(entry.mode.rawValue, forKey: "mode")
+        record.setValue(Int64(entry.correctMatches), forKey: "correctMatches")
+        record.setValue(Int64(entry.missedMatches), forKey: "missedMatches")
+        record.setValue(Int64(entry.wrongMatches), forKey: "wrongMatches")
+        record.setValue(entry.date, forKey: "date")
+        return saveContext()
+    }
+
+    /// Deletes the entries with the given ids.
+    func delete(ids: Set<UUID>) {
+        let request = NSFetchRequest<NSManagedObject>(entityName: Self.entityName)
+        request.predicate = NSPredicate(format: "id IN %@", Array(ids))
+        for record in (try? context.fetch(request)) ?? [] {
+            context.delete(record)
+        }
+        saveContext()
+    }
+
+    @discardableResult
+    private func saveContext() -> Bool {
+        do {
+            try context.save()
+            return true
+        } catch {
+            // Drop the unsaved change so the next save does not fail on it again.
+            context.rollback()
+            return false
+        }
+    }
+
+    private static func entry(from record: NSManagedObject) -> ScoreEntry? {
+        guard let id = record.value(forKey: "id") as? UUID,
+              let name = record.value(forKey: "name") as? String,
+              let modeName = record.value(forKey: "mode") as? String,
+              let mode = StimulusMode(rawValue: modeName),
+              let date = record.value(forKey: "date") as? Date else { return nil }
+        func int(_ key: String) -> Int { Int(record.value(forKey: key) as? Int64 ?? 0) }
+        return ScoreEntry(id: id, name: name, score: int("score"), n: int("n"), mode: mode,
+                          correctMatches: int("correctMatches"), missedMatches: int("missedMatches"),
+                          wrongMatches: int("wrongMatches"), date: date)
     }
 }

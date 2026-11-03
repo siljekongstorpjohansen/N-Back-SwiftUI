@@ -22,6 +22,8 @@ class N_Back_SwiftUIVM : ObservableObject  {
         ?? AVSpeechSynthesisVoice.speechVoices().first { $0.language.hasPrefix("en") }
     private let highScoreStore = HighScoreStore()
     private let settingsStore = GameSettingsStore()
+    private let playerNameStore = PlayerNameStore()
+    private let scoreHistoryStore: ScoreHistoryStore
     private var game = NBackGame()
     /// The running round loop. Cancelled when the round ends or the player leaves the game screen.
     private var roundTask: Task<Void, Never>?
@@ -30,6 +32,16 @@ class N_Back_SwiftUIVM : ObservableObject  {
     @Published private(set) var highScore: Int
     @Published private(set) var settings: GameSettings
     @Published var selectedMode: StimulusMode = .visual
+
+    // Score history state
+    /// Saved rounds, best score first.
+    @Published private(set) var scoreHistory: [ScoreEntry] = []
+    /// Name typed in the round summary; starts as the name used last time.
+    @Published var playerName: String
+    /// True once the round that just ended has been saved, so it cannot be saved twice.
+    @Published private(set) var isRoundSaved = false
+    /// Shown in the round summary when the database could not be written.
+    @Published private(set) var saveErrorMessage: String?
 
     // Game screen state
     @Published private(set) var phase: NBackGame.Phase = .idle
@@ -50,9 +62,12 @@ class N_Back_SwiftUIVM : ObservableObject  {
     @Published private(set) var visualMistakeCount = 0
     @Published private(set) var auditoryMistakeCount = 0
 
-    init(){
+    init(scoreHistoryStore: ScoreHistoryStore = ScoreHistoryStore()) {
+        self.scoreHistoryStore = scoreHistoryStore
         highScore = highScoreStore.load()
         settings = settingsStore.load()
+        playerName = playerNameStore.load()
+        scoreHistory = scoreHistoryStore.loadAll()
         // Play spoken letters even when the phone's silent switch is on.
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
     }
@@ -74,6 +89,8 @@ class N_Back_SwiftUIVM : ObservableObject  {
     func startRound() {
         cancelRoundTimer()
         showsRoundSummary = false
+        isRoundSaved = false
+        saveErrorMessage = nil
         game.start(settings: settings, mode: selectedMode)
         publishGameState()
         roundTask = Task { [weak self] in
@@ -95,6 +112,36 @@ class N_Back_SwiftUIVM : ObservableObject  {
     /// Closes the round summary popup.
     func dismissRoundSummary() {
         showsRoundSummary = false
+    }
+
+    /// True when the round that just ended can be saved: it is not saved yet and a name is typed.
+    var canSaveRound: Bool {
+        phase == .finished && !isRoundSaved && ScoreEntry.cleanedName(playerName) != nil
+    }
+
+    /// Saves the round that just ended to the score history under `playerName`.
+    func saveRoundToHistory() {
+        guard canSaveRound, let name = ScoreEntry.cleanedName(playerName) else { return }
+        let entry = ScoreEntry(id: UUID(), name: name, score: game.score, n: game.settings.n,
+                               mode: game.mode, correctMatches: game.hits,
+                               missedMatches: game.misses, wrongMatches: game.falseAlarms,
+                               date: Date())
+        if scoreHistoryStore.add(entry) {
+            isRoundSaved = true
+            saveErrorMessage = nil
+            playerName = name
+            playerNameStore.save(name)
+            scoreHistory = scoreHistoryStore.loadAll()
+        } else {
+            saveErrorMessage = "The score could not be saved. Please try again."
+        }
+    }
+
+    /// Deletes the score history rows at `offsets` (positions in `scoreHistory`).
+    func deleteScores(at offsets: IndexSet) {
+        let ids = Set(offsets.map { scoreHistory[$0].id })
+        scoreHistoryStore.delete(ids: ids)
+        scoreHistory = scoreHistoryStore.loadAll()
     }
 
     /// Registers the player's match press for one stream and triggers feedback if it was wrong.
@@ -213,6 +260,17 @@ class N_Back_SwiftUIVM : ObservableObject  {
     var gridSizeText: String { "\(settings.gridSize)×\(settings.gridSize)" }
     var letterCountText: String { "\(settings.letterCount)" }
     var spokenLettersText: String { "Letters used: " + settings.spokenLetters.joined(separator: ", ") }
+
+    // Score history rows
+    /// For example "2-back · Both · 30 Oct 2026".
+    func historyDetailText(for entry: ScoreEntry) -> String {
+        "\(entry.n)-back · \(entry.mode.title) · " + entry.date.formatted(date: .abbreviated, time: .omitted)
+    }
+
+    /// For example "5 correct · 2 missed · 1 wrong".
+    func historyCountsText(for entry: ScoreEntry) -> String {
+        "\(entry.correctMatches) correct · \(entry.missedMatches) missed · \(entry.wrongMatches) wrong"
+    }
 
     // Speech fallback
     /// False when the device has no English text-to-speech voice.

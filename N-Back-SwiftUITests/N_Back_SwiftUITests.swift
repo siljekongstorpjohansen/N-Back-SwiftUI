@@ -4,7 +4,7 @@
 //
 //  Unit tests for the Model layer (no UI): sequence generation, match-rate enforcement,
 //  the first-n guarantee, press rules (before start, after end, first n events, double press),
-//  scoring, and settings validation/storage. Run with ⌘U in Xcode.
+//  scoring, settings validation/storage, and the score history database. Run with ⌘U in Xcode.
 //
 
 import XCTest
@@ -326,5 +326,48 @@ final class GameSettingsTests: XCTestCase {
         XCTAssertEqual(store.saveIfHigher(5), 5)
         XCTAssertEqual(store.saveIfHigher(3), 5, "a lower score does not replace the high score")
         XCTAssertEqual(store.load(), 5)
+    }
+}
+
+// MARK: - Score history
+
+final class ScoreHistoryStoreTests: XCTestCase {
+
+    private func entry(name: String, score: Int, date: Date) -> ScoreEntry {
+        ScoreEntry(id: UUID(), name: name, score: score, n: 2, mode: .dual,
+                   correctMatches: score, missedMatches: 1, wrongMatches: 0, date: date)
+    }
+
+    func testSavedEntryIsLoadedWithAllValues() {
+        let store = ScoreHistoryStore(inMemory: true)
+        let saved = entry(name: "Silje", score: 7, date: Date(timeIntervalSince1970: 1_000))
+        XCTAssertTrue(store.add(saved))
+        XCTAssertEqual(store.loadAll(), [saved])
+    }
+
+    func testEntriesAreSortedByScoreThenNewestFirst() {
+        let store = ScoreHistoryStore(inMemory: true)
+        let low = entry(name: "A", score: 2, date: Date(timeIntervalSince1970: 3_000))
+        let highOld = entry(name: "B", score: 9, date: Date(timeIntervalSince1970: 1_000))
+        let highNew = entry(name: "C", score: 9, date: Date(timeIntervalSince1970: 2_000))
+        [low, highOld, highNew].forEach { store.add($0) }
+        XCTAssertEqual(store.loadAll().map(\.name), ["C", "B", "A"])
+    }
+
+    func testDeleteRemovesOnlyTheGivenEntries() {
+        let store = ScoreHistoryStore(inMemory: true)
+        let keep = entry(name: "Keep", score: 1, date: Date())
+        let remove = entry(name: "Remove", score: 2, date: Date())
+        store.add(keep)
+        store.add(remove)
+        store.delete(ids: [remove.id])
+        XCTAssertEqual(store.loadAll(), [keep])
+    }
+
+    func testNameIsTrimmedCutAndMustNotBeEmpty() {
+        XCTAssertNil(ScoreEntry.cleanedName("   "))
+        XCTAssertEqual(ScoreEntry.cleanedName("  Silje \n"), "Silje")
+        let longName = String(repeating: "x", count: 50)
+        XCTAssertEqual(ScoreEntry.cleanedName(longName)?.count, ScoreEntry.maxNameLength)
     }
 }
